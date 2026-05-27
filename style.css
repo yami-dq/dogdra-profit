@@ -254,3 +254,25 @@ th {
   color: var(--muted);
   padding: 24px;
 }
+
+.mode-switch {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 560px;
+  margin: 18px auto 0;
+}
+
+.mode-btn {
+  font-size: 24px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #26384a;
+  color: var(--muted);
+  box-shadow: 0 5px 0 rgba(0,0,0,0.35);
+}
+
+.mode-btn.active {
+  background: linear-gradient(180deg, #f5c542, #b8860b);
+  color: #081826;
+}

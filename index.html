@@ -3,26 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ドグドラ利益計算</title>
+  <title>培養利益計算</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#081826" />
   <link rel="stylesheet" href="style.css" />
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#081826">
 </head>
 <body>
   <div class="app">
     <header>
       <h1>培養利益計算</h1>
-      <div class="subtitle">
-        45個 / 75個 / 核 の3択ドロップ想定・PT全員分カウント
+      <div class="subtitle">輝晶培養 利益シミュレーター</div>
+
+      <div class="mode-switch">
+        <button id="modeKisei" class="mode-btn active" onclick="setMode('kisei')">
+          輝晶核
+        </button>
+        <button id="modeSenkisei" class="mode-btn" onclick="setMode('senkisei')">
+          閃輝晶核
+        </button>
       </div>
     </header>
 
     <main class="grid">
       <section class="card prices">
-        <h2>価格設定</h2>
+        <h2 id="priceTitle">価格設定</h2>
 
         <div class="form-row">
-          <label for="corePrice">輝晶核価格</label>
+          <label for="corePrice">核価格</label>
           <input id="corePrice" type="number" value="1280000" />
         </div>
 
@@ -32,13 +39,13 @@
         </div>
 
         <div class="form-row">
-          <label for="cellPrice">魔因細胞価格</label>
+          <label for="cellPrice">細胞価格</label>
           <input id="cellPrice" type="number" value="103000" />
         </div>
       </section>
 
       <section class="card summary">
-        <h2>現在利益</h2>
+        <h2 id="summaryTitle">現在利益</h2>
 
         <div id="profit" class="profit">0 G</div>
 

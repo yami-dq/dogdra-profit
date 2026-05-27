@@ -1,15 +1,34 @@
-const STORAGE_KEY = "dogdra-profit-v1";
+const STORAGE_KEY = "dqx-culture-profit-v2";
 
 const state = {
-  prices: {
-    core: 1280000,
-    fragment: 15000,
-    cell: 103000,
+  activeMode: "kisei",
+  modes: {
+    kisei: {
+      label: "輝晶核",
+      prices: {
+        core: 1280000,
+        fragment: 15000,
+        cell: 103000,
+      },
+      drops: [],
+    },
+    senkisei: {
+      label: "閃輝晶核",
+      prices: {
+        core: 0,
+        fragment: 0,
+        cell: 0,
+      },
+      drops: [],
+    },
   },
-  drops: [],
 };
 
 const yen = new Intl.NumberFormat("ja-JP");
+
+function currentMode() {
+  return state.modes[state.activeMode];
+}
 
 function loadState() {
   const saved = localStorage.getItem(STORAGE_KEY);
@@ -17,8 +36,24 @@ function loadState() {
 
   try {
     const parsed = JSON.parse(saved);
-    if (parsed.prices) state.prices = parsed.prices;
-    if (Array.isArray(parsed.drops)) state.drops = parsed.drops;
+
+    if (parsed.activeMode) state.activeMode = parsed.activeMode;
+
+    if (parsed.modes) {
+      if (parsed.modes.kisei) {
+        state.modes.kisei = {
+          ...state.modes.kisei,
+          ...parsed.modes.kisei,
+        };
+      }
+
+      if (parsed.modes.senkisei) {
+        state.modes.senkisei = {
+          ...state.modes.senkisei,
+          ...parsed.modes.senkisei,
+        };
+      }
+    }
   } catch {}
 }
 
@@ -26,8 +61,14 @@ function saveState() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
-function counts() {
-  return state.drops.reduce(
+function setMode(mode) {
+  state.activeMode = mode;
+  saveState();
+  render();
+}
+
+function counts(drops = currentMode().drops) {
+  return drops.reduce(
     (acc, drop) => {
       acc[drop]++;
       return acc;
@@ -36,14 +77,9 @@ function counts() {
   );
 }
 
-function calcProfit(drops) {
-  const c = drops.reduce(
-    (acc, drop) => {
-      acc[drop]++;
-      return acc;
-    },
-    { "45": 0, "75": 0, core: 0 }
-  );
+function calcProfit(drops = currentMode().drops) {
+  const mode = currentMode();
+  const c = counts(drops);
 
   const fragments = c["45"] * 45 + c["75"] * 75;
   const exchanged = Math.floor(fragments / 99);
@@ -51,29 +87,30 @@ function calcProfit(drops) {
   const battleCount = c["45"] + c["75"] + c.core;
 
   const sales =
-    (exchanged + c.core) * state.prices.core * 0.95 +
-    remainder * state.prices.fragment * 0.95;
+    (exchanged + c.core) * mode.prices.core * 0.95 +
+    remainder * mode.prices.fragment * 0.95;
 
-  const cost = (battleCount / 4) * 30 * state.prices.cell;
+  const cost = (battleCount / 4) * 30 * mode.prices.cell;
 
   return sales - cost;
 }
 
 function metrics() {
+  const mode = currentMode();
   const c = counts();
 
   const fragments = c["45"] * 45 + c["75"] * 75;
   const exchanged = Math.floor(fragments / 99);
   const remainder = fragments % 99;
   const battleCount = c["45"] + c["75"] + c.core;
-  const profit = calcProfit(state.drops);
+  const profit = calcProfit();
 
   const breakEvenCell =
-    ((((54 / 99) + 0.1) * state.prices.core * 0.95) * 4) / 30;
+    ((((54 / 99) + 0.1) * mode.prices.core * 0.95) * 4) / 30;
 
   const expectedPerBattle =
-    (((54 / 99) + 0.1) * state.prices.core * 0.95) -
-      (30 / 4) * state.prices.cell;
+    (((54 / 99) + 0.1) * mode.prices.core * 0.95) -
+    (30 / 4) * mode.prices.cell;
 
   return {
     c,
@@ -88,39 +125,50 @@ function metrics() {
 }
 
 function addDrop(type) {
-  state.drops.push(type);
+  currentMode().drops.push(type);
   saveState();
   render();
 }
 
 function undoLast() {
-  state.drops.pop();
+  currentMode().drops.pop();
   saveState();
   render();
 }
 
 function resetAll() {
-  if (!confirm("本当にリセットしますか？")) return;
-  state.drops = [];
+  const mode = currentMode();
+  if (!confirm(`${mode.label} のカウントとログをリセットしますか？`)) return;
+
+  mode.drops = [];
   saveState();
   render();
 }
 
 function updatePrices() {
-  state.prices.core = Number(document.getElementById("corePrice").value || 0);
-  state.prices.fragment = Number(document.getElementById("fragmentPrice").value || 0);
-  state.prices.cell = Number(document.getElementById("cellPrice").value || 0);
+  const mode = currentMode();
+
+  mode.prices.core = Number(document.getElementById("corePrice").value || 0);
+  mode.prices.fragment = Number(document.getElementById("fragmentPrice").value || 0);
+  mode.prices.cell = Number(document.getElementById("cellPrice").value || 0);
 
   saveState();
   render();
 }
 
 function render() {
-  document.getElementById("corePrice").value = state.prices.core;
-  document.getElementById("fragmentPrice").value = state.prices.fragment;
-  document.getElementById("cellPrice").value = state.prices.cell;
-
+  const mode = currentMode();
   const m = metrics();
+
+  document.getElementById("modeKisei").classList.toggle("active", state.activeMode === "kisei");
+  document.getElementById("modeSenkisei").classList.toggle("active", state.activeMode === "senkisei");
+
+  document.getElementById("priceTitle").textContent = `${mode.label} 価格設定`;
+  document.getElementById("summaryTitle").textContent = `${mode.label} 現在利益`;
+
+  document.getElementById("corePrice").value = mode.prices.core;
+  document.getElementById("fragmentPrice").value = mode.prices.fragment;
+  document.getElementById("cellPrice").value = mode.prices.cell;
 
   const profitEl = document.getElementById("profit");
   profitEl.textContent = `${yen.format(Math.round(m.profit))} G`;
@@ -131,8 +179,7 @@ function render() {
   document.getElementById("battleCount").textContent = yen.format(m.battleCount);
   document.getElementById("personalBattleCount").textContent = m.battleCount / 4;
   document.getElementById("fragmentTotal").textContent = yen.format(m.fragments);
-  document.getElementById("exchangeInfo").textContent =
-    `${m.exchanged} / ${m.remainder}`;
+  document.getElementById("exchangeInfo").textContent = `${m.exchanged} / ${m.remainder}`;
 
   document.getElementById("breakEvenCell").textContent =
     `${yen.format(Math.floor(m.breakEvenCell))} G`;
@@ -150,9 +197,10 @@ function render() {
 }
 
 function renderHistory() {
+  const mode = currentMode();
   const box = document.getElementById("historyTable");
 
-  if (state.drops.length === 0) {
+  if (mode.drops.length === 0) {
     box.innerHTML = `<div class="empty">まだログがありません</div>`;
     return;
   }
@@ -169,9 +217,9 @@ function renderHistory() {
       <tbody>
   `;
 
-  state.drops.forEach((drop, i) => {
+  mode.drops.forEach((drop, i) => {
     const label = drop === "core" ? "核" : `${drop}個`;
-    const profit = calcProfit(state.drops.slice(0, i + 1));
+    const profit = calcProfit(mode.drops.slice(0, i + 1));
 
     html += `
       <tr>
@@ -187,20 +235,42 @@ function renderHistory() {
 }
 
 function drawProfitChart() {
+  const mode = currentMode();
   const canvas = document.getElementById("profitChart");
   const ctx = canvas.getContext("2d");
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  const data = state.drops.map((_, i) =>
-    calcProfit(state.drops.slice(0, i + 1))
+  const data = mode.drops.map((_, i) =>
+    calcProfit(mode.drops.slice(0, i + 1))
   );
 
-  if (!data.length) return;
+  if (!data.length) {
+    drawEmptyChart(ctx, canvas.width, canvas.height, "ログを入力すると表示されます");
+    return;
+  }
 
   const min = Math.min(...data, 0);
   const max = Math.max(...data, 0);
   const range = max - min || 1;
+
+  ctx.strokeStyle = "rgba(255,255,255,0.25)";
+  ctx.lineWidth = 1;
+
+  for (let i = 0; i <= 4; i++) {
+    const y = 40 + i * 55;
+    ctx.beginPath();
+    ctx.moveTo(40, y);
+    ctx.lineTo(560, y);
+    ctx.stroke();
+  }
+
+  const zeroY = 260 - ((0 - min) / range) * 220;
+  ctx.strokeStyle = "rgba(255,255,255,0.75)";
+  ctx.beginPath();
+  ctx.moveTo(40, zeroY);
+  ctx.lineTo(560, zeroY);
+  ctx.stroke();
 
   ctx.strokeStyle = "#36d399";
   ctx.lineWidth = 4;
@@ -215,6 +285,11 @@ function drawProfitChart() {
   });
 
   ctx.stroke();
+
+  ctx.fillStyle = "#f5f7fa";
+  ctx.font = "16px system-ui";
+  ctx.fillText(`${yen.format(Math.round(max))}G`, 44, 28);
+  ctx.fillText(`${yen.format(Math.round(min))}G`, 44, 292);
 }
 
 function drawRatioChart() {
@@ -225,10 +300,14 @@ function drawRatioChart() {
 
   const c = counts();
   const values = [c["45"], c["75"], c.core];
+  const labels = ["45個", "75個", "核"];
   const colors = ["#2b6cb0", "#f59e0b", "#b8860b"];
   const total = values.reduce((a, b) => a + b, 0);
 
-  if (!total) return;
+  if (!total) {
+    drawEmptyChart(ctx, canvas.width, canvas.height, "ログを入力すると表示されます");
+    return;
+  }
 
   let start = -Math.PI / 2;
 
@@ -236,14 +315,35 @@ function drawRatioChart() {
     const angle = (v / total) * Math.PI * 2;
 
     ctx.beginPath();
-    ctx.moveTo(300, 150);
-    ctx.arc(300, 150, 100, start, start + angle);
+    ctx.moveTo(300, 130);
+    ctx.arc(300, 130, 95, start, start + angle);
     ctx.closePath();
     ctx.fillStyle = colors[i];
     ctx.fill();
 
     start += angle;
   });
+
+  labels.forEach((label, i) => {
+    const x = 95 + i * 145;
+    const y = 270;
+    const percent = Math.round((values[i] / total) * 100);
+
+    ctx.fillStyle = colors[i];
+    ctx.fillRect(x, y - 14, 14, 14);
+
+    ctx.fillStyle = "#f5f7fa";
+    ctx.font = "16px system-ui";
+    ctx.fillText(`${label} ${percent}%`, x + 22, y);
+  });
+}
+
+function drawEmptyChart(ctx, width, height, text) {
+  ctx.fillStyle = "rgba(255,255,255,0.65)";
+  ctx.font = "22px system-ui";
+  ctx.textAlign = "center";
+  ctx.fillText(text, width / 2, height / 2);
+  ctx.textAlign = "left";
 }
 
 document.getElementById("corePrice").addEventListener("input", updatePrices);
