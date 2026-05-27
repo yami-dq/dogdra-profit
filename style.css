@@ -1,12 +1,11 @@
 :root {
   --bg: #081826;
-  --panel: #102a42;
   --text: #f5f7fa;
   --muted: #b9c6d3;
   --gold: #f5c542;
   --green: #36d399;
   --red: #ff6b6b;
-  --border: rgba(255, 255, 255, 0.16);
+  --border: rgba(255,255,255,0.16);
 }
 
 * {
@@ -44,6 +43,30 @@ h1 {
   font-size: 16px;
 }
 
+.mode-switch {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  max-width: 560px;
+  margin: 18px auto 0;
+}
+
+.mode-btn {
+  font-size: 24px;
+  padding: 16px;
+  border-radius: 18px;
+  background: #26384a;
+  color: var(--muted);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 5px 0 rgba(0,0,0,0.35);
+}
+
+.mode-btn.active {
+  background: linear-gradient(180deg, #f5c542, #b8860b);
+  color: #081826;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -67,7 +90,8 @@ h1 {
 .buttons,
 .counts,
 .history,
-.chart-card {
+.chart-card,
+.formula-card {
   grid-column: span 12;
 }
 
@@ -83,6 +107,10 @@ h2 {
   margin: 0 0 14px;
   color: var(--gold);
   font-size: 24px;
+}
+
+.sub-heading {
+  margin-top: 22px;
 }
 
 .form-row {
@@ -107,6 +135,32 @@ input {
   color: white;
   font-size: 20px;
   text-align: right;
+}
+
+.sale-method {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.sale-btn {
+  font-size: 18px;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: #26384a;
+  color: var(--muted);
+  cursor: pointer;
+  box-shadow: 0 5px 0 rgba(0,0,0,0.35);
+}
+
+.sale-btn span {
+  font-size: 14px;
+}
+
+.sale-btn.active {
+  background: linear-gradient(180deg, #36d399, #15803d);
+  color: white;
 }
 
 .profit {
@@ -221,6 +275,17 @@ button:active {
   font-weight: 900;
 }
 
+.formula-box {
+  line-height: 1.9;
+  font-size: 16px;
+}
+
+.formula-main {
+  font-size: 20px;
+  color: var(--gold);
+  font-weight: 800;
+}
+
 canvas {
   width: 100%;
   height: 300px;
@@ -253,26 +318,4 @@ th {
   text-align: center;
   color: var(--muted);
   padding: 24px;
-}
-
-.mode-switch {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  max-width: 560px;
-  margin: 18px auto 0;
-}
-
-.mode-btn {
-  font-size: 24px;
-  padding: 16px;
-  border-radius: 18px;
-  background: #26384a;
-  color: var(--muted);
-  box-shadow: 0 5px 0 rgba(0,0,0,0.35);
-}
-
-.mode-btn.active {
-  background: linear-gradient(180deg, #f5c542, #b8860b);
-  color: #081826;
 }
