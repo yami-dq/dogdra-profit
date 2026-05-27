@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ドグドラ利益計算</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>ドグドラ利益計算</h1>
+      <div class="subtitle">
+        45個 / 75個 / 核 の3択ドロップ想定・PT全員分カウント
+      </div>
+    </header>
+
+    <main class="grid">
+      <section class="card prices">
+        <h2>価格設定</h2>
+
+        <div class="form-row">
+          <label for="corePrice">輝晶核価格</label>
+          <input id="corePrice" type="number" value="1280000" />
+        </div>
+
+        <div class="form-row">
+          <label for="fragmentPrice">破片価格</label>
+          <input id="fragmentPrice" type="number" value="15000" />
+        </div>
+
+        <div class="form-row">
+          <label for="cellPrice">魔因細胞価格</label>
+          <input id="cellPrice" type="number" value="103000" />
+        </div>
+      </section>
+
+      <section class="card summary">
+        <h2>現在利益</h2>
+
+        <div id="profit" class="profit">0 G</div>
+
+        <div class="small-metrics">
+          <div class="metric">
+            <span>戦闘数</span>
+            <strong id="battleCount">0</strong>
+          </div>
+
+          <div class="metric">
+            <span>1人あたり戦闘数</span>
+            <strong id="personalBattleCount">0</strong>
+          </div>
+
+          <div class="metric">
+            <span>破片合計</span>
+            <strong id="fragmentTotal">0</strong>
+          </div>
+
+          <div class="metric">
+            <span>交換核数 / 余り</span>
+            <strong id="exchangeInfo">0 / 0</strong>
+          </div>
+
+          <div class="metric">
+            <span>黒字細胞上限</span>
+            <strong id="breakEvenCell">0 G</strong>
+          </div>
+
+          <div class="metric">
+            <span>期待利益/戦</span>
+            <strong id="expectedPerBattle">0 G</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="card buttons">
+        <h2>ドロップ入力</h2>
+
+        <div class="drop-buttons">
+          <button class="btn45" onclick="addDrop('45')">45</button>
+          <button class="btn75" onclick="addDrop('75')">75</button>
+          <button class="btnCore" onclick="addDrop('core')">核</button>
+        </div>
+
+        <div class="sub-buttons">
+          <button class="btnSub" onclick="undoLast()">1つ戻す</button>
+          <button class="btnDanger" onclick="resetAll()">リセット</button>
+        </div>
+      </section>
+
+      <section class="card counts">
+        <h2>カウント</h2>
+
+        <div class="count-grid">
+          <div class="count-box">
+            <div class="label">45個</div>
+            <div id="count45" class="value">0</div>
+          </div>
+
+          <div class="count-box">
+            <div class="label">75個</div>
+            <div id="count75" class="value">0</div>
+          </div>
+
+          <div class="count-box">
+            <div class="label">核</div>
+            <div id="countCore" class="value">0</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card chart-card">
+        <h2>利益推移</h2>
+        <canvas id="profitChart" width="600" height="300"></canvas>
+      </section>
+
+      <section class="card chart-card">
+        <h2>ドロップ割合</h2>
+        <canvas id="ratioChart" width="600" height="300"></canvas>
+      </section>
+
+      <section class="card history">
+        <h2>ログ</h2>
+        <div id="historyTable"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
