@@ -1,0 +1,11 @@
+{
+    "name": "ドグドラ利益計算",
+    "short_name": "ドグドラ",
+    "description": "DQX 輝晶獣ドグドラ利益計算ツール",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#081826",
+    "theme_color": "#081826",
+    "orientation": "portrait",
+    "icons": []
+  }
