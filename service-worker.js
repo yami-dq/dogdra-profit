@@ -1,4 +1,4 @@
-const CACHE_NAME = "dqx-profit-v5";
+const CACHE_NAME = "dqx-profit-v6";
 
 const ASSETS = [
   "./",
