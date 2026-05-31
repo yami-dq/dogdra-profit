@@ -234,6 +234,7 @@ button {
   cursor: pointer;
   box-shadow: 0 6px 0 rgba(0,0,0,0.35);
   transition: 0.08s;
+  touch-action: manipulation;
 }
 
 button:active {
