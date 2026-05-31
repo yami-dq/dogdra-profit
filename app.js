@@ -151,20 +151,18 @@ function metrics() {
     mode.prices.core *
     fee;
 
-  const expectedCostPerBattle =
-    (30 / 4) *
-    mode.prices.cell;
+  const expectedProfitPerMochi =
+    expectedSalesPerBattle * 4 -
+    30 * mode.prices.cell;
 
-  const expectedPerBattle =
-    expectedSalesPerBattle - expectedCostPerBattle;
-  
   const mealRuns =
     mode.label === "輝晶核"
       ? 7
       : 5;
-  
-  const expectedMealProfit =
-    expectedPerBattle * mealRuns;
+
+const expectedMealProfit =
+
+  expectedProfitPerMochi * mealRuns;
 
   const breakEvenCell =
     (expectedSalesPerBattle * 4) / 30;
@@ -177,7 +175,7 @@ function metrics() {
     battleCount,
     profit,
     breakEvenCell,
-    expectedPerBattle,
+    expectedPerBattle: expectedProfitPerMochi,
     expectedMealProfit,
   };
 }
