@@ -157,6 +157,14 @@ function metrics() {
 
   const expectedPerBattle =
     expectedSalesPerBattle - expectedCostPerBattle;
+  
+  const mealRuns =
+    mode.label === "輝晶核"
+      ? 7
+      : 5;
+  
+  const expectedMealProfit =
+    expectedPerBattle * mealRuns;
 
   const breakEvenCell =
     (expectedSalesPerBattle * 4) / 30;
@@ -170,6 +178,7 @@ function metrics() {
     profit,
     breakEvenCell,
     expectedPerBattle,
+    expectedMealProfit,
   };
 }
 
@@ -257,8 +266,22 @@ function render() {
   document.getElementById("breakEvenCell").textContent =
     `${yen.format(Math.floor(m.breakEvenCell))} G`;
 
-  document.getElementById("expectedPerBattle").textContent =
-    `${yen.format(Math.round(m.expectedPerBattle))} G`;
+  const expectedLabel =
+    state.activeMode === "kisei"
+      ? "7餅期待利益"
+      : "5餅期待利益";
+  
+  document.getElementById(
+    "expectedLabel"
+  ).textContent =
+    expectedLabel;
+  
+  document.getElementById(
+    "expectedPerBattle"
+  ).textContent =
+    `${yen.format(
+      Math.round(m.expectedMealProfit)
+    )} G`;
 
   document.getElementById("count45").textContent =
     yen.format(m.c["45"]);
