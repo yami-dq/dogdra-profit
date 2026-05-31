@@ -348,6 +348,19 @@ function toggleDetail() {
     : "詳細計算を隠す";
 }
 
+function openTerms() {
+  alert("openTerms called");
+  const modal = document.getElementById("termsModal");
+  modal.classList.remove("hidden");
+  modal.style.display = "flex";
+}
+
+function closeTerms() {
+  const modal = document.getElementById("termsModal");
+  modal.classList.add("hidden");
+  modal.style.display = "none";
+}
+
 function renderDetail() {
   const mode = currentMode();
   const fee = getFeeRate(mode);
@@ -382,35 +395,35 @@ function renderDetail() {
 
   document.getElementById("detailSaleMethod").textContent =
     mode.saleMethod === "moomon"
-      ? "モーモン販売"
-      : "バザー販売";
+      ? "モーモン販売（手数料なし）"
+      : "バザー販売（手数料5%）";
 
   document.getElementById("detailMealRuns").textContent =
     `${mealRuns}餅`;
 
   document.getElementById("detailBattles").textContent =
-    `${battles}戦`;
+    `${mealRuns}餅 × 4戦 = ${battles}戦`;
 
   document.getElementById("detailFragments").textContent =
-    `${yen.format(expectedFragments)}個`;
+    `54個 × ${battles}戦 = ${yen.format(expectedFragments)}個`;
 
   document.getElementById("detailFragmentCore").textContent =
-    `${fragmentCore.toFixed(2)}個`;
+    `${yen.format(expectedFragments)}個 ÷ 99 = ${fragmentCore.toFixed(2)}個`;
 
   document.getElementById("detailDirectCore").textContent =
-    `${directCore.toFixed(2)}個`;
+    `0.1個 × ${battles}戦 = ${directCore.toFixed(2)}個`;
 
   document.getElementById("detailTotalCore").textContent =
-    `${totalCore.toFixed(2)}個`;
+    `${fragmentCore.toFixed(2)}個 + ${directCore.toFixed(2)}個 = ${totalCore.toFixed(2)}個`;
 
   document.getElementById("detailSales").textContent =
-    `${yen.format(Math.round(sales))} G`;
+    `${totalCore.toFixed(2)}個 × ${yen.format(mode.prices.core)}G × ${fee} = ${yen.format(Math.round(sales))} G`;
 
   document.getElementById("detailCost").textContent =
-    `${yen.format(Math.round(cost))} G`;
+    `${mealRuns}餅 × 30個 × ${yen.format(mode.prices.cell)}G = ${yen.format(Math.round(cost))} G`;
 
   document.getElementById("detailProfit").textContent =
-    `${yen.format(Math.round(profit))} G`;
+    `${yen.format(Math.round(sales))}G - ${yen.format(Math.round(cost))}G = ${yen.format(Math.round(profit))} G`;
 }
 
 function drawProfitChart() {
@@ -536,12 +549,26 @@ function drawEmptyChart(ctx, width, height, text) {
 document.getElementById("corePrice").addEventListener("input", updatePrices);
 document.getElementById("fragmentPrice").addEventListener("input", updatePrices);
 document.getElementById("cellPrice").addEventListener("input", updatePrices);
-
+/*
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js");
   });
 }
-
+*/
 loadState();
 render();
+
+window.addEventListener("click", (e) => {
+  const modal = document.getElementById("termsModal");
+
+  if (e.target === modal) {
+    closeTerms();
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeTerms();
+  }
+});
