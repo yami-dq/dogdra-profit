@@ -292,6 +292,7 @@ function render() {
   renderHistory();
   drawProfitChart();
   drawRatioChart();
+  renderDetail();
 }
 
 function renderHistory() {
@@ -334,6 +335,82 @@ function renderHistory() {
   `;
 
   box.innerHTML = html;
+}
+
+function toggleDetail() {
+  const box = document.getElementById("detailBox");
+  const button = document.getElementById("detailToggle");
+
+  box.classList.toggle("hidden");
+
+  button.textContent = box.classList.contains("hidden")
+    ? "詳細計算を表示"
+    : "詳細計算を隠す";
+}
+
+function renderDetail() {
+  const mode = currentMode();
+  const fee = getFeeRate(mode);
+
+  const mealRuns =
+    state.activeMode === "kisei"
+      ? 7
+      : 5;
+
+  const battles = mealRuns * 4;
+
+  const expectedFragments = 54 * battles;
+  const fragmentCore = expectedFragments / 99;
+  const directCore = 0.1 * battles;
+  const totalCore = fragmentCore + directCore;
+
+  const sales =
+    totalCore *
+    mode.prices.core *
+    fee;
+
+  const cost =
+    mealRuns *
+    30 *
+    mode.prices.cell;
+
+  const profit =
+    sales - cost;
+
+  document.getElementById("detailMode").textContent =
+    mode.label;
+
+  document.getElementById("detailSaleMethod").textContent =
+    mode.saleMethod === "moomon"
+      ? "モーモン販売"
+      : "バザー販売";
+
+  document.getElementById("detailMealRuns").textContent =
+    `${mealRuns}餅`;
+
+  document.getElementById("detailBattles").textContent =
+    `${battles}戦`;
+
+  document.getElementById("detailFragments").textContent =
+    `${yen.format(expectedFragments)}個`;
+
+  document.getElementById("detailFragmentCore").textContent =
+    `${fragmentCore.toFixed(2)}個`;
+
+  document.getElementById("detailDirectCore").textContent =
+    `${directCore.toFixed(2)}個`;
+
+  document.getElementById("detailTotalCore").textContent =
+    `${totalCore.toFixed(2)}個`;
+
+  document.getElementById("detailSales").textContent =
+    `${yen.format(Math.round(sales))} G`;
+
+  document.getElementById("detailCost").textContent =
+    `${yen.format(Math.round(cost))} G`;
+
+  document.getElementById("detailProfit").textContent =
+    `${yen.format(Math.round(profit))} G`;
 }
 
 function drawProfitChart() {

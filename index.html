@@ -142,6 +142,71 @@
         <h2>ドロップ割合</h2>
         <canvas id="ratioChart" width="600" height="300"></canvas>
       </section>
+      
+      <section class="card detail-card">
+        <button id="detailToggle" class="detail-toggle" onclick="toggleDetail()">
+          詳細計算を表示
+        </button>
+      
+        <div id="detailBox" class="detail-box hidden">
+          <h2>詳細計算</h2>
+      
+          <div class="detail-row">
+            <span>対象</span>
+            <strong id="detailMode">-</strong>
+          </div>
+      
+          <div class="detail-row">
+            <span>販売方法</span>
+            <strong id="detailSaleMethod">-</strong>
+          </div>
+      
+          <div class="detail-row">
+            <span>計算対象</span>
+            <strong id="detailMealRuns">-</strong>
+          </div>
+      
+          <div class="detail-row">
+            <span>期待戦闘数</span>
+            <strong id="detailBattles">-</strong>
+          </div>
+      
+          <div class="detail-row">
+            <span>期待破片数</span>
+            <strong id="detailFragments">-</strong>
+          </div>
+      
+          <div class="detail-row">
+            <span>破片の核換算</span>
+            <strong id="detailFragmentCore">-</strong>
+          </div>
+      
+          <div class="detail-row">
+            <span>期待直ドロ核</span>
+            <strong id="detailDirectCore">-</strong>
+          </div>
+      
+          <div class="detail-row">
+            <span>期待核数</span>
+            <strong id="detailTotalCore">-</strong>
+          </div>
+      
+          <div class="detail-row">
+            <span>期待売上</span>
+            <strong id="detailSales">-</strong>
+          </div>
+      
+          <div class="detail-row">
+            <span>細胞代</span>
+            <strong id="detailCost">-</strong>
+          </div>
+      
+          <div class="detail-row result">
+            <span>期待利益</span>
+            <strong id="detailProfit">-</strong>
+          </div>
+        </div>
+      </section>
 
       <section class="card formula-card">
         <h2>計算方法</h2>

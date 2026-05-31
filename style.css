@@ -319,3 +319,45 @@ th {
   color: var(--muted);
   padding: 24px;
 }
+
+.detail-card {
+  grid-column: span 12;
+}
+
+.detail-toggle {
+  width: 100%;
+  font-size: 24px;
+  padding: 18px;
+  background: linear-gradient(180deg, #f5c542, #b8860b);
+  color: #081826;
+}
+
+.detail-box {
+  margin-top: 18px;
+}
+
+.hidden {
+  display: none;
+}
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-row span {
+  color: var(--muted);
+}
+
+.detail-row strong {
+  text-align: right;
+  font-size: 18px;
+}
+
+.detail-row.result strong {
+  color: var(--green);
+  font-size: 22px;
+}
