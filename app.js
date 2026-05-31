@@ -549,13 +549,13 @@ function drawEmptyChart(ctx, width, height, text) {
 document.getElementById("corePrice").addEventListener("input", updatePrices);
 document.getElementById("fragmentPrice").addEventListener("input", updatePrices);
 document.getElementById("cellPrice").addEventListener("input", updatePrices);
-/*
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./service-worker.js");
   });
 }
-*/
+
 loadState();
 render();
 
