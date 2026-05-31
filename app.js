@@ -160,9 +160,8 @@ function metrics() {
       ? 7
       : 5;
 
-const expectedMealProfit =
-
-  expectedProfitPerMochi * mealRuns;
+  const expectedMealProfit =
+    expectedProfitPerMochi * mealRuns;
 
   const breakEvenCell =
     (expectedSalesPerBattle * 4) / 30;
